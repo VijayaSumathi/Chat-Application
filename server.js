@@ -6,7 +6,6 @@ const mongoose = require('mongoose');
 var login = require('./models/login');
 var bodyParser = require('body-parser')
 router.use(bodyParser.urlencoded({ extended: false }))
-
 // parse application/json
 router.use(bodyParser.json())
 http.listen(3000,function(){
@@ -53,7 +52,7 @@ io.sockets.on('connection',function(socket){
             callback(true);
             socket.nickname =data;
             nicknames.push(socket.nickname);
-            io.sockets.exit('usernames',nicknames);
+            io.sockets.emit('usernames',nicknames);
     
         }
         
