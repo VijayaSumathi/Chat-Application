@@ -42,3 +42,12 @@ router.post('/login',function(req, res, next) {
   });
 
 
+io.sockets.on('connection',function(socket){
+
+    socket.on('send message',function(data){
+        console.log(data);
+        io.sockets.emit('new message',data);
+        socket.broadcast.emit('new message',data);
+    });
+
+});
