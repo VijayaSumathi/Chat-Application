@@ -41,19 +41,19 @@ router.post('/login',function(req, res, next) {
   
   });
 
-nicknames=[];
+users={};
 io.sockets.on('connection',function(socket){
 
     socket.on('new user',function(data,callback){
         
-        if(nicknames.indexOf(data)!=-1){  // check if name exits
+        if(data in users){  // check if name exits
             callback(false);
         }
         else{
             callback(true);
             socket.nickname =data;
-            nicknames.push(socket.nickname);
-            io.sockets.exit('usernames',nicknames);
+          users[socket.nickname]=socket
+            
     
         }
         
@@ -64,7 +64,14 @@ io.sockets.on('connection',function(socket){
     socket.on('send message',function(data){
         console.log(data);
         io.sockets.emit('new message',data);
-        socket.broadcast.emit('new message',data);
+        socket.broadcast.emit('new message',{msg:data,nick:socket.nickname});
     });
 
+    socket.on('disconnect',function(data){  
+      if(!sockets.nickname) return ;
+      delete users[socket.nickname]
+       });
+    function updatenicknames(){
+        io.sockets.emit('usernames',users)
+      }
 });
