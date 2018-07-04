@@ -41,8 +41,25 @@ router.post('/login',function(req, res, next) {
   
   });
 
-
+nicknames=[];
 io.sockets.on('connection',function(socket){
+
+    socket.on('new user',function(data,callback){
+        
+        if(nicknames.indexOf(data)!=-1){  // check if name exits
+            callback(false);
+        }
+        else{
+            callback(true);
+            socket.nickname =data;
+            nicknames.push(socket.nickname);
+            io.sockets.exit('usernames',nicknames);
+    
+        }
+        
+    });
+
+
 
     socket.on('send message',function(data){
         console.log(data);
