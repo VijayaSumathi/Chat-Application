@@ -38,6 +38,7 @@
             var $nickForm=$('#setNick');
             var $nickError=$('#nickError');
             var $nickBox=$('#nickname');
+            var $users=$('#users');
              var $messageForm=$('#send-message');
                var $messageBox=$('#message');
                 var $chat=$('#chat');
@@ -52,6 +53,13 @@
               }
               });
               nickBox.val('');
+            });
+            socket.on('usernames',function(data){
+              var html = '';
+             for(i=0;i<data.length ;i++){
+           html+=data[i]+'<br/>';
+            }
+            $users.html(html); 
             });
                 $messageForm.submit(function(e){
               e.preventDefault();
