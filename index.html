@@ -7,7 +7,9 @@
                 display:none;
             }#chatWrap{
                 float:left;
+                margin-left: 200px;
                 border: 1px #000 solid;
+                margin-bottom:25px;
             }
             .error{
                     color:red
@@ -15,6 +17,19 @@
       .whisper{
                 color:grey;
                 font-style: italic;
+           }
+           #users{
+               float:right;
+            width: 200px;
+            text-align:center;
+            background-color:lightgray;
+                position: fixed;
+                height: 100%;
+                right: 0px;
+                top: 0px;
+                padding-top: 10px;
+                padding-bottom: 10px;
+                border: 1px solid rgba(29, 49, 91, .3);
            }
         </style>
     </head>
@@ -35,6 +50,7 @@
             <input type="submit" value="send">
         </form>
         </div>
+
         <div id="users"></div>
         </div>
         <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
@@ -64,9 +80,11 @@
             socket.on('usernames',function(data){
               var html = '';
              for(var i=0;i<data.length ;i++){
+
+                 
            html+=data[i]+'<br/>';
             }
-            $users.html(html); 
+            $users.html("<label><strong><h2>online users</h2></strong></label><br/>"+html); 
             });
                 $messageForm.submit(function(e){
                 e.preventDefault();
