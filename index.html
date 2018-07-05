@@ -10,10 +10,7 @@
 		height: 500px;
 		overflow: scroll;
 	}
-	#contentwrap
-	{
-		display: none;
-	}
+	
 	#chatwrap
 	{
 		float: left;
@@ -81,12 +78,11 @@
 
 				});
 				$nickbox.val('');
-			});
-			$messageform.submit(function(e){
-				//alert($messageip.val());
-				e.preventDefault();
-				//console.log($messageip.val());
-				//alert($messageip.val());
+            });
+            
+
+			$messageform.submit(function(e){				 
+				e.preventDefault();				
 				socket.emit('sendmessage',$messageip.val(),function(data){
 					$chat.append('<span class="error"><b>'+data+"</span><Br>");		
 				});
