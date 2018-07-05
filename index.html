@@ -8,7 +8,20 @@
             }#chatWrap{
                 float:left;
                 border: 1px #000 solid;
+            }#users{
+                float:right;
+                width: 300px;
+                position: fixed;
+                height: 100%;
+                right: 0px;
+                top: 0px;
+                text-align: center;
+                padding-top: 10px;
+                padding-bottom: 10px;
+                border: 1px solid rgba(29, 49, 91, .3);
+
             }
+
         </style>
     </head>
     <body>
@@ -68,7 +81,7 @@
               $messageBox.val('');
          });
          socket.on('new message',function(data){
-         $chat.append(data+"<br/>")
+         $chat.append(+data.msg+"<br/>")
          });
         });
         </script>
