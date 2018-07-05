@@ -59,9 +59,10 @@ router.post('/register',function(req,res){
 });
 
 
-
+var handle=null;
 router.post('/login',function(req,res){
     console.log(req.body.name);    
+    handle=req.body.name;
         register.findOne({"name":req.body.name, "password":req.body.password},function(err,doc){
         if(err){
             res.send(err); 
@@ -76,10 +77,22 @@ router.post('/login',function(req,res){
         
 });
 });
-
+var private=null;
+    var users={};
+    var keys={};
+    
 io.on('connection',function(socket){
     console.log("Connection :User is connected  "+handle);
-    console.log("Connection : " +socket.id);
-
-
+    console.log("Socket ID  : " +socket.id);
+    io.to(socket.id).emit('handle', handle);
+    users[handle]=socket.id;   // 
+    keys[socket.id]=handle;
+    console.log(users[handle]);
+    console.log(keys[socket.id]);
+ 
+    for(var i = 0; i < users.length;i++){
+        console.log("Users list : "+users[i]);
+    }
+   
+    console.log("keys list : "+keys);
 });
