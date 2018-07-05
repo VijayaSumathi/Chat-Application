@@ -26,8 +26,60 @@ mongoose.connect('mongodb://localhost/chatroomapp')
 router.get('/',function(req,res){
     res.sendfile("login.html");
 });
+
 router.get('/userlogin',function(req,res){
     res.sendfile("chat.html");
 });
 
 
+router.post('/register',function(req,res){ 
+  
+    var user={
+        "name":req.body.name,       
+        "password":req.body.password,
+        "email":req.body.email,
+    };
+    console.log(user);    
+      register.findOne({"name":req.body.name},function(err,doc){
+        if(err){
+            res.json(err); 
+        }
+        if(doc == null){
+             register.create(user,function(err,doc){
+                if(err) res.json(err);
+                else{
+                    //res.send("success");
+                }
+            });
+        }else{
+            res.json({message:"user Exist"});
+        }
+    });
+    
+});
+
+
+
+router.post('/login',function(req,res){
+    console.log(req.body.name);    
+        register.findOne({"name":req.body.name, "password":req.body.password},function(err,doc){
+        if(err){
+            res.send(err); 
+        }
+        if(doc==null){
+            res.send("User has not registered");
+        }
+        else{
+            console.log("register success");
+             return  res.redirect('/userlogin')  
+        }
+        
+});
+});
+
+io.on('connection',function(socket){
+    console.log("Connection :User is connected  "+handle);
+    console.log("Connection : " +socket.id);
+
+
+});
