@@ -7,18 +7,33 @@
 	#chat
 	{
 		width: 400px;
-		height: 500px;
+		height: 400px;
 		overflow: scroll;
 	}
 	#contentwrap
 	{
 		display: none;
 	}
-	#chatwrap
-	{
-		float: left;
-		border: 1px #000 solid;
-	}
+	#chatWrap{
+                float:left;
+                margin-left: 400px;
+                border: 25px solid lightgray;
+                padding:10px;
+                overflow:auto;
+            }
+	#users{
+               float:right;
+            width: 200px;
+            text-align:center;
+            background-color:lightgray;
+                position: fixed;
+                height: 100%;
+                right: 0px;
+                top: 0px;
+                padding-top: 10px;
+                padding-bottom: 10px;
+                border: 1px solid rgba(29, 49, 91, .3);
+           }
 	.error
 	{
 		color: red;
@@ -43,8 +58,8 @@
 		<div id="chatwrap">
 			<div id="chat"></div>
 			<form id="sendmessage">
-				<input type="text" id="message"/>
-				<input type="submit"/>
+				<input  size="50"type="text" id="message"/>
+				<input type="submit" value="send"/>
 			</form>
 		</div>
 		<div id="users"></div>
@@ -107,7 +122,7 @@
 					str+=data[i]+'<br/>';
 
 				}
-				$users.html(str);
+				$users.html("<label><strong><h2>online users</h2></strong></label><br/>"+str);
 			});
 			socket.on('whisper',function(data){
 				$chat.append('<span class="whisper"><b>'+data.nick+':-</b>'+data.msg+"</span><Br>");
