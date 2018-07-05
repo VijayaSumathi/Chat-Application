@@ -51,7 +51,7 @@ var chatschema=mongoose.Schema({
 users={};
 io.sockets.on('connection',function(socket){
       var query = chat.find({});
-      query.sort('--created').limit(8).exec(function(err,docs){
+      query.sort('--created').limit(2).exec(function(err,docs){
         if(err) throw err ;
         //console.log("sending old msg");
         socket.emit('load old msg',docs);
@@ -70,7 +70,7 @@ io.sockets.on('connection',function(socket){
             socket.nickname =data;
           users[socket.nickname]=socket
             
-    
+          updatenicknames();
         }
         
     });
@@ -80,6 +80,7 @@ io.sockets.on('connection',function(socket){
     socket.on('send message',function(data){
         console.log(data);
         var msg=data.trim();
+        console.log(msg);
         if(msg.substr(0,3)=='/w'){
             msg= msg.substr(3);
             var ind = msg.indexOf('');
@@ -101,8 +102,8 @@ io.sockets.on('connection',function(socket){
                 callback('error');
             }
         }
-        else{
-            var newmsg = new chat({msg:msg,nick:socket.nickname});
+        else{ console.log(msg);
+            var newmsg = new chat({email:"@",message:msg});
             newmsg.save(function(err){
   
             if(err) throw err;
@@ -114,11 +115,11 @@ io.sockets.on('connection',function(socket){
     });
 
     socket.on('disconnect',function(data){  
-      if(!sockets.nickname) return ;
+      if(!socket.nickname) return ;
       delete users[socket.nickname]
        });
     function updatenicknames(){
-        io.sockets.emit('usernames',object.keys(users));
+        io.sockets.emit('usernames',Object.keys(users));
     }
 });
 
