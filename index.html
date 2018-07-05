@@ -9,7 +9,7 @@
             }#chatWrap{
                 float:left;
                 margin-left: 400px;
-                border: 1px #000 solid;
+                border: 25px solid lightgray;
                 padding:10px;
                 overflow:auto;
             }
@@ -84,7 +84,7 @@
              for(var i=0;i<data.length ;i++){
 
                  
-           html+=data[i]+'<br/>';
+           html+='<button>'+data[i]+'</button><br/>';
             }
             $users.html("<label><strong><h2>online users</h2></strong></label><br/>"+html); 
             });
