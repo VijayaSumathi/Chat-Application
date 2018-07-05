@@ -41,8 +41,24 @@ router.post('/login',function(req, res, next) {
   
   });
 
+  
+var chatschema=mongoose.Schema({
+    email:String,
+    message:String
+  });
+  var chat=mongoose.model('message',chatschema)
+
 users={};
 io.sockets.on('connection',function(socket){
+      var query = chat.find({});
+      query.sort('--created').limit(8).exec(function(err,docs){
+        if(err) throw err ;
+        //console.log("sending old msg");
+        socket.emit('load old msg',docs);
+       
+        
+     });
+          
 
     socket.on('new user',function(data,callback){
         
@@ -63,8 +79,38 @@ io.sockets.on('connection',function(socket){
 
     socket.on('send message',function(data){
         console.log(data);
-        io.sockets.emit('new message',data);
-        socket.broadcast.emit('new message',{msg:data,nick:socket.nickname});
+        var msg=data.trim();
+        if(msg.substr(0,3)=='/w'){
+            msg= msg.substr(3);
+            var ind = msg.indexOf('');
+            if(ind!=-1)
+            {
+                var name = msg.substring(0,ind);
+                var msg = msg.substring(ind + 1);
+                if(name in users){
+                    users[name].emit('whisper',{msg:msg,nick:socket.nickname});
+                    console.log('message seny is:'+msg);
+                    console.log('whisper');
+                }
+                else{
+                    callback('error! enter a valid user.');
+                }
+                
+            }
+            else{
+                callback('error');
+            }
+        }
+        else{
+            var newmsg = new chat({msg:msg,nick:socket.nickname});
+            newmsg.save(function(err){
+  
+            if(err) throw err;
+            io.sockets.emit('new message',{msg:msg,nick:socket.nickname});
+            });
+        }
+
+
     });
 
     socket.on('disconnect',function(data){  
@@ -72,6 +118,7 @@ io.sockets.on('connection',function(socket){
       delete users[socket.nickname]
        });
     function updatenicknames(){
-        io.sockets.emit('usernames',users)
-      }
+        io.sockets.emit('usernames',object.keys(users));
+    }
 });
+
