@@ -5,7 +5,7 @@ var user = new Schema({
     name:{type:String,unique: true},    
     password: String,   
     email:String,
-    friends:[],
+    status: { type: String, default: "offline" },
     createdAt: { type: Date, default: Date.now  },
     updated_at: { type: Date, default: Date.now }
 });

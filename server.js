@@ -72,6 +72,7 @@ router.post('/login',function(req,res){
         }
         else{
             console.log("register success");
+
              return  res.redirect('/userlogin')  
         }
         
@@ -80,19 +81,36 @@ router.post('/login',function(req,res){
 var private=null;
     var users={};
     var keys={};
-    
+    var usersnames={};
+    var nicknames={};
 io.on('connection',function(socket){
     console.log("Connection :User is connected  "+handle);
     console.log("Socket ID  : " +socket.id);
-    io.to(socket.id).emit('handle', handle);
-    users[handle]=socket.id;   // 
-    keys[socket.id]=handle;
-    console.log(users[handle]);
-    console.log(keys[socket.id]);
- 
-    for(var i = 0; i < users.length;i++){
-        console.log("Users list : "+users[i]);
-    }
+    io.to(socket.id).emit('handle', handle);  // to emit username
+	users[handle]=socket.id;
+	keys[socket.id]=handle;
+	console.log("Users list : "+users);
+	console.log("keys list : "+keys);
+	
+	register.find({},function(err,doc){
+		if(err) throw err;
+		var allusers=[];
+		 
+		for(var i in doc){
+			if(doc[i].name===handle)
+			{
+				console.log("the users are"+doc[i].name+"\t\t"+doc[i].email);
+
+			}
+			else{
+				console.log("the users are"+doc[i].name+"\t\t"+doc[i].email);
+				allusers.push(doc[i].name);
+			}					
+		}	
+		
+		io.to(socket.id).emit('friend_list', allusers);
+
+         console.log("the users are\n"+doc)
+	});
    
-    console.log("keys list : "+keys);
 });
