@@ -91,8 +91,8 @@ io.on('connection',function(socket){
 	keys[socket.id]=handle;
 	console.log("Users list : "+users);
 	console.log("keys list : "+keys);
-	
-	register.find({},function(err,doc){
+
+	register.find({},function(err,doc){      // send all users to client side 
 		if(err) throw err;
 		var allusers=[];
 		 
@@ -109,8 +109,17 @@ io.on('connection',function(socket){
 		}	
 		
 		io.to(socket.id).emit('friend_list', allusers);
+		 
+		socket.on('sendmessage', function(data) {
+			var msg=data;
+			io.sockets.emit('newmessage',{msg:msg,name:keys[socket.id]});
+		 });
 
-         console.log("the users are\n"+doc)
 	});
    
+
+   
+
+
+
 });

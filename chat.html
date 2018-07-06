@@ -10,7 +10,16 @@
 		height: 500px;
 		overflow: scroll;
 	}
-	
+	#button {
+    background-color: #4CAF50; /* Green */
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+   }
 	#chatwrap
 	{
 		float: left;
@@ -25,6 +34,11 @@
 		color: green;
 		font-style: italic;
 	}
+	#contentwrap
+	{
+		display: none;
+	}
+
 	</style>
 </head>
 <body> 
@@ -32,6 +46,27 @@
 	 <p>list of all other users are</p>
 		<div id="allusers"></div>
 	</div>
+	
+	
+	 
+	<div id="contentwrap">
+		<div id="chatwrap">
+			<div id="chat"></div>
+			<form id="sendmessage">
+				<input type="text" id="message"/>
+				<input type="submit"/>
+			</form>
+		</div>
+		<div id="users"></div>
+	</div> 
+	
+
+
+
+
+
+
+
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
 	<script src="/socket.io/socket.io.js"></script>
 	<script>
@@ -54,10 +89,29 @@
 		   });
              
    			 socket.on('friend_list', function(data) {
-    			    console.log("Friends list : "+data);
-     			   $allusers.append('<p>'+data+'</p>');
-                 
-    });
+					console.log("Friends list : "+data);
+					var str=' ';
+					for(var i=0 ;i<data.length;i++)
+					{
+						str+='<button id="button" name="username" onclick="pop()">'+data[i]+'</button>&nbsp'
+					
+					}
+     			   $allusers.html(str);                 
+			});
+		   
+			
+
+
+		    $messageform.submit(function(e){				
+				e.preventDefault();				
+				socket.emit('sendmessage',$messageip.val(),function(data){
+					$chat.append('<span class="error"><b>'+data+"</span><Br>");		
+				});
+				$messageip.val("");//clear input field
+			});
+			socket.on('newmessage',function(data){			
+				$chat.append('<span class="normal"><b>'+data.name+':-</b>'+data.msg+"</span><Br>");
+			});
 		
 		});
 	</script>
